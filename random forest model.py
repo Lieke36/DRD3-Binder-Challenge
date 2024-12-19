@@ -14,6 +14,24 @@ from scipy.stats import randint
 from sklearn.tree import export_graphviz
 from IPython.display import Image
 import graphviz
+import pandas
+
+data_file = "train_var.csv"
+data_good = pd.read_csv(data_file)
+print(data_good.head())
+
+
+
+def read_from_file(file):
+    f = open(file, "r")
+    a = f.read()
+    b = a.rsplit()
+    return b
+
+features = read_from_file("Important_variables.txt")
+
+X = data_good[features] # Features
+y = data_good.label # Target variable
 
 # Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
