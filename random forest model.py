@@ -44,50 +44,53 @@ X_testdata= test_good[features]
 # Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-rf = RandomForestClassifier()
-rf.fit(X_train, y_train)
+# rf = RandomForestClassifier()
+# rf.fit(X_train, y_train)
 
-y_pred = rf.predict(X_test)
+# y_pred = rf.predict(X_test)
 
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
-
-
-param_dist = {'n_estimators': randint(50,500),
-              'max_depth': randint(1,20)}
-
-# Create a random forest classifier
-rf = RandomForestClassifier()
-
-# Use random search to find the best hyperparameters
-rand_search = RandomizedSearchCV(rf, 
-                                 param_distributions = param_dist, 
-                                 n_iter=5, 
-                                 cv=5)
-
-# Fit the random search object to the data
-rand_search.fit(X_train, y_train)
+# accuracy = accuracy_score(y_test, y_pred)
+# print("Accuracy:", accuracy)
 
 
-# Create a variable for the best model
-best_rf = rand_search.best_estimator_
+# param_dist = {'n_estimators': randint(50,500),
+#               'max_depth': randint(1,20)}
 
-# Print the best hyperparameters
-print('Best hyperparameters:',  rand_search.best_params_)
+# # Create a random forest classifier
+# rf = RandomForestClassifier()
+
+# # Use random search to find the best hyperparameters
+# rand_search = RandomizedSearchCV(rf, 
+#                                  param_distributions = param_dist, 
+#                                  n_iter=5, 
+#                                  cv=5)
+
+# # Fit the random search object to the data
+# rand_search.fit(X_train, y_train)
+
+
+# # Create a variable for the best model
+# best_rf = rand_search.best_estimator_
+
+# # Print the best hyperparameters
+# print('Best hyperparameters:',  rand_search.best_params_)
 
 model = RandomForestClassifier(n_estimators = 400, max_depth=12)
 model.fit(X_train, y_train)
 test_preds = model.predict(X_testdata)
 print(test_preds)
 
+Unique_ID = list(range(1,6234))
+# submission = pd.DataFrame({
+#     'Unique_ID': test_good.loc['Unique_ID'].reset_index(drop = True),
+#     'target_feature': pd.Series(test_preds, name='target_feature')
+# })
 
-submission = pd.DataFrame({
-    'Unique_ID': test_good.loc['Unique_ID'].reset_index(drop = True),
-    'target_feature': pd.Series(test_preds, name='target_feature')
-})
-
-submission_path = 'submission1.csv'
-submission.to_csv(submission_path, index = False, sep = ',' )
+Submission_forest = pd.DataFrame(test_preds, index=Unique_ID, columns=['target_feature'])
+Submission_forest.index.name = 'Unique_ID'
+print(Submission_forest.head())
+submission_path = 'submission2.csv'
+Submission_forest.to_csv(submission_path)
 print(f"Submission file created: {submission_path}")
 # y_pred=rand_search(X_test)
 
