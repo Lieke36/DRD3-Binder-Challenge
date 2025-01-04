@@ -23,7 +23,7 @@ data_good = pd.read_csv(data_file)
 print(data_good.head())
 
 test_file = 'test_data_variables.csv'
-test_good = pd.read_csv(data_file)
+test_good = pd.read_csv(test_file)
 
 
 def read_from_file(file):
@@ -34,11 +34,12 @@ def read_from_file(file):
 
 features = read_from_file("Important_variables.txt")
 
+
 X = data_good[features] # Features
-y = data_good.label # Target variable
+y = data_good['label'] # Target variable
 
 X_testdata= test_good[features]
-Y_testdata = test_good.label
+#Y_testdata = test_good.label
 
 # Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
@@ -76,17 +77,18 @@ print('Best hyperparameters:',  rand_search.best_params_)
 
 model = RandomForestClassifier(n_estimators = 400, max_depth=12)
 model.fit(X_train, y_train)
-val_preds = model.predict(X_testdata)
+test_preds = model.predict(X_testdata)
+print(test_preds)
 
-test_preds = model.predict('target_feature')
 
 submission = pd.DataFrame({
-    'Unique_ID': test_data.loc[valid_test_indices, 'Unique_ID'].reset_index(drop = True),
+    'Unique_ID': test_good.loc['Unique_ID'].reset_index(drop = True),
     'target_feature': pd.Series(test_preds, name='target_feature')
 })
 
-submission_path = 'submission.csv'
+submission_path = 'submission1.csv'
 submission.to_csv(submission_path, index = False, sep = ',' )
+print(f"Submission file created: {submission_path}")
 # y_pred=rand_search(X_test)
 
 # accuracy = accuracy_score(y_test, y_pred)
